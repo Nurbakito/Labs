@@ -1,6 +1,6 @@
 import psycopg2
 
-def create_get_phonebook():
+def create_by_username():
     conn = psycopg2.connect(
         dbname="phonebook",
         user="postgres",
@@ -11,14 +11,17 @@ def create_get_phonebook():
     cur = conn.cursor()
 
     function_definition = """
-    CREATE OR REPLACE FUNCTION get_phonebook()
+    CREATE OR REPLACE FUNCTION byusername(username_pattern VARCHAR(100))
 RETURNS TABLE (
     id INTEGER,
     username VARCHAR(100),
     phone VARCHAR(20)
 ) AS $$
 BEGIN
-    RETURN QUERY SELECT * FROM PhoneBook;
+    RETURN QUERY 
+        SELECT PhoneBook.id, PhoneBook.username, PhoneBook.phone 
+        FROM PhoneBook 
+        WHERE PhoneBook.username = username_pattern;
 END;
 $$ LANGUAGE plpgsql;
 """
@@ -29,4 +32,4 @@ $$ LANGUAGE plpgsql;
     cur.close()
     conn.close()
 
-create_get_phonebook()
+create_by_username()

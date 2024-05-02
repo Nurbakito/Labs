@@ -70,6 +70,7 @@ def delete_data(filter):
         WHERE username = %s OR phone = %s;
     """, (filter, filter))
     conn.commit()
+insert_from_console()
 
 
 
